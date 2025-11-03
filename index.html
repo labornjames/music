@@ -6,7 +6,6 @@
 <title>特别的祝福</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
   body {
     margin: 0;
     height: 100vh;
@@ -15,7 +14,6 @@
     font-family: 'Pacifico', cursive;
     position: relative;
   }
-
   .start-btn {
     position: absolute;
     top: 50%;
@@ -32,12 +30,10 @@
     transition: 0.3s;
     z-index: 10;
   }
-
   .start-btn:hover {
     background: #ff5e91;
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
   }
-
   .loader {
     display: none;
     position: absolute;
@@ -51,7 +47,6 @@
     animation: heartbeat 1s infinite;
     z-index: 10;
   }
-
   .loader::before,
   .loader::after {
     content: "";
@@ -61,16 +56,13 @@
     background-color: #ff7da8;
     border-radius: 50%;
   }
-
   .loader::before { top: -40px; left: 0; }
   .loader::after { left: -40px; top: 0; }
-
   @keyframes heartbeat {
     0% { transform: scale(1) rotate(45deg); }
     50% { transform: scale(1.2) rotate(45deg); }
     100% { transform: scale(1) rotate(45deg); }
   }
-
   .wish {
     position: absolute;
     color: #ff4f7d;
@@ -84,12 +76,10 @@
     text-shadow: 0 0 5px rgba(255, 100, 140, 0.3);
     animation: fadeIn 1s ease forwards;
   }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
     to { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-
   .dot {
     position: absolute;
     width: 6px;
@@ -98,7 +88,6 @@
     border-radius: 50%;
     animation: fall 6s linear infinite;
   }
-
   @keyframes fall {
     from { transform: translateY(-10px); opacity: 1; }
     to { transform: translateY(100vh); opacity: 0; }
@@ -107,7 +96,7 @@
 </head>
 <body>
 
-<button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
+<button id="startButton" class="start-btn">🌸 点击开始祝福 🌸</button>
 <div class="loader" id="loader"></div>
 
 <audio 
@@ -123,33 +112,30 @@ const wishes = [
   "保持好心情", "珍惜每一刻", "你超棒的", "早点休息", "我想你了",
   "梦想成真", "天冷了，多穿衣服", "顺顺利利", "要相信自己哦",
   "别太累啦，偶尔偷个懒也好", "你是最棒的", "记得好好护肤",
-  "保持微笑呀", "愿所有烦恼都消失", "学会爱自己，才能更好地爱别人",
-  "希望每一天都闪闪发光", "祝你今天也元气满满", "好运常伴", "梦想开花"
+  "保持微笑呀", "愿所有烦恼都消失", "希望每一天都闪闪发光",
+  "祝你今天也元气满满", "好运常伴", "梦想开花"
 ];
 
 const music = document.getElementById('music');
 const button = document.getElementById('startButton');
 const loader = document.getElementById('loader');
 
-// ✅ 解锁音频权限（iOS + Android 通用）
-function unlockAudio() {
+// ✅ 解锁音频（iPhone & Android）
+document.addEventListener('touchstart', () => {
   music.play().then(() => {
     music.pause();
     music.currentTime = 0;
-    console.log('音频解锁成功');
-  }).catch(() => {});
-  document.removeEventListener('touchstart', unlockAudio);
-  document.removeEventListener('click', unlockAudio);
-}
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('click', unlockAudio, { once: true });
+    console.log("音频已预激活");
+  }).catch(()=>{});
+}, { once: true });
 
-// ✅ 点击按钮播放
+// ✅ 点击开始按钮
 button.addEventListener("click", async () => {
   button.style.display = 'none';
   loader.style.display = 'block';
+
   try {
-    await music.play();
+    await music.play(); // 🎵 直接播放
   } catch (e) {
     console.log("播放被阻止", e);
   }
