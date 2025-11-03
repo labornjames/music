@@ -33,7 +33,6 @@
     transition: 0.3s;
     z-index: 10;
   }
-
   .start-btn:hover {
     background: #ff5e91;
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
@@ -53,7 +52,6 @@
     animation: heartbeat 1s infinite;
     z-index: 10;
   }
-
   .loader::before,
   .loader::after {
     content: "";
@@ -63,12 +61,10 @@
     background-color: #ff7da8;
     border-radius: 50%;
   }
-
   .loader::before {
     top: -40px;
     left: 0;
   }
-
   .loader::after {
     left: -40px;
     top: 0;
@@ -142,25 +138,19 @@ const music = document.getElementById('music');
 const button = document.getElementById('startButton');
 const loader = document.getElementById('loader');
 
-// ✅ iOS 特殊处理：第一次触摸即解锁音频权限
-document.body.addEventListener('touchstart', function unlockAudio() {
-  music.play().then(() => {
-    console.log('音频已解锁');
-  }).catch(() => {});
-  document.body.removeEventListener('touchstart', unlockAudio);
-});
-
 button.addEventListener("click", async () => {
   button.style.display = 'none';
   loader.style.display = 'block'; // 显示心跳动画
 
+  // iOS需用户交互才能播放
   try {
-    await music.play(); // 🚀 点击后立即播放音乐
+    await music.load();
+    await music.play();
   } catch (e) {
     console.log("播放被阻止", e);
   }
 
-  // ❤️ 延迟2秒显示祝福语
+  // 模拟加载2秒后进入祝福模式
   setTimeout(() => {
     loader.style.display = 'none';
     startWishes();
