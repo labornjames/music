@@ -16,7 +16,6 @@
     position: relative;
   }
 
-  /* 按钮样式 */
   .start-btn {
     position: absolute;
     top: 50%;
@@ -39,7 +38,6 @@
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
   }
 
-  /* 心形加载动画 */
   .loader {
     display: none;
     position: absolute;
@@ -64,15 +62,8 @@
     border-radius: 50%;
   }
 
-  .loader::before {
-    top: -40px;
-    left: 0;
-  }
-
-  .loader::after {
-    left: -40px;
-    top: 0;
-  }
+  .loader::before { top: -40px; left: 0; }
+  .loader::after { left: -40px; top: 0; }
 
   @keyframes heartbeat {
     0% { transform: scale(1) rotate(45deg); }
@@ -80,7 +71,6 @@
     100% { transform: scale(1) rotate(45deg); }
   }
 
-  /* 祝福语样式 */
   .wish {
     position: absolute;
     color: #ff4f7d;
@@ -100,7 +90,6 @@
     to { opacity: 1; transform: scale(1) rotate(0deg); }
   }
 
-  /* 飘落光点 */
   .dot {
     position: absolute;
     width: 6px;
@@ -121,7 +110,6 @@
 <button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
 <div class="loader" id="loader"></div>
 
-<!-- ✅ 使用 jsDelivr CDN 加速并正确设置 MIME -->
 <audio 
   id="music" 
   src="https://cdn.jsdelivr.net/gh/labornjames/music/阿冗%20-%20与我无关_L.mp3"
@@ -143,25 +131,29 @@ const music = document.getElementById('music');
 const button = document.getElementById('startButton');
 const loader = document.getElementById('loader');
 
-// ✅ 手机音频权限预解锁（iOS/Android）
-document.addEventListener('click', () => {
+// ✅ 解锁音频权限（iOS + Android 通用）
+function unlockAudio() {
   music.play().then(() => {
     music.pause();
     music.currentTime = 0;
+    console.log('音频解锁成功');
   }).catch(() => {});
-}, { once: true });
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
+// ✅ 点击按钮播放
 button.addEventListener("click", async () => {
   button.style.display = 'none';
-  loader.style.display = 'block'; // 显示心跳动画
-
+  loader.style.display = 'block';
   try {
-    await music.play(); // 🚀 点击后立即播放音乐
+    await music.play();
   } catch (e) {
     console.log("播放被阻止", e);
   }
 
-  // ❤️ 延迟2秒显示祝福语
   setTimeout(() => {
     loader.style.display = 'none';
     startWishes();
@@ -169,7 +161,6 @@ button.addEventListener("click", async () => {
 });
 
 function startWishes() {
-  // 每0.3秒出现一条祝福语
   let count = 0;
   const interval = setInterval(() => {
     const wish = document.createElement('div');
@@ -182,7 +173,6 @@ function startWishes() {
     if (count > 200) clearInterval(interval);
   }, 300);
 
-  // 背景飘落光点
   for (let i = 0; i < 60; i++) {
     const dot = document.createElement('div');
     dot.className = 'dot';
