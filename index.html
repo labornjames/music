@@ -6,7 +6,6 @@
 <title>特别的祝福</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
   body {
     margin: 0;
     height: 100vh;
@@ -15,8 +14,6 @@
     font-family: 'Pacifico', cursive;
     position: relative;
   }
-
-  /* 按钮样式 */
   .start-btn {
     position: absolute;
     top: 50%;
@@ -33,13 +30,10 @@
     transition: 0.3s;
     z-index: 10;
   }
-
   .start-btn:hover {
     background: #ff5e91;
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
   }
-
-  /* 心形加载动画 */
   .loader {
     display: none;
     position: absolute;
@@ -53,7 +47,6 @@
     animation: heartbeat 1s infinite;
     z-index: 10;
   }
-
   .loader::before,
   .loader::after {
     content: "";
@@ -63,24 +56,13 @@
     background-color: #ff7da8;
     border-radius: 50%;
   }
-
-  .loader::before {
-    top: -40px;
-    left: 0;
-  }
-
-  .loader::after {
-    left: -40px;
-    top: 0;
-  }
-
+  .loader::before { top: -40px; left: 0; }
+  .loader::after { left: -40px; top: 0; }
   @keyframes heartbeat {
     0% { transform: scale(1) rotate(45deg); }
     50% { transform: scale(1.2) rotate(45deg); }
     100% { transform: scale(1) rotate(45deg); }
   }
-
-  /* 祝福语样式 */
   .wish {
     position: absolute;
     color: #ff4f7d;
@@ -94,13 +76,10 @@
     text-shadow: 0 0 5px rgba(255, 100, 140, 0.3);
     animation: fadeIn 1s ease forwards;
   }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
     to { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-
-  /* 飘落光点 */
   .dot {
     position: absolute;
     width: 6px;
@@ -109,7 +88,6 @@
     border-radius: 50%;
     animation: fall 6s linear infinite;
   }
-
   @keyframes fall {
     from { transform: translateY(-10px); opacity: 1; }
     to { transform: translateY(100vh); opacity: 0; }
@@ -121,13 +99,13 @@
 <button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
 <div class="loader" id="loader"></div>
 
-<!-- ✅ 使用 jsDelivr CDN 加速并正确设置 MIME -->
 <audio 
   id="music" 
-  src="https://cdn.jsdelivr.net/gh/labornjames/music/阿冗%20-%20与我无关_L.mp3"
+  src="https://cdn.jsdelivr.net/gh/labornjames/music/%E9%98%BF%E5%86%97%20-%20%E4%B8%8E%E6%88%91%E6%97%A0%E5%85%B3_L.mp3"
   preload="auto"
   playsinline
-  webkit-playsinline>
+  webkit-playsinline
+  muted>
 </audio>
 
 <script>
@@ -143,25 +121,25 @@ const music = document.getElementById('music');
 const button = document.getElementById('startButton');
 const loader = document.getElementById('loader');
 
-// ✅ 手机音频权限预解锁（iOS/Android）
-document.addEventListener('click', () => {
+// iOS/Chrome 预解锁音频权限
+document.body.addEventListener('touchstart', function unlockAudio() {
   music.play().then(() => {
-    music.pause();
-    music.currentTime = 0;
+    console.log('音频已预加载');
   }).catch(() => {});
-}, { once: true });
+  document.body.removeEventListener('touchstart', unlockAudio);
+});
 
 button.addEventListener("click", async () => {
   button.style.display = 'none';
-  loader.style.display = 'block'; // 显示心跳动画
-
+  loader.style.display = 'block';
+  
   try {
-    await music.play(); // 🚀 点击后立即播放音乐
+    music.muted = false; // 🔊 取消静音
+    await music.play(); // 点击后立即播放
   } catch (e) {
     console.log("播放被阻止", e);
   }
 
-  // ❤️ 延迟2秒显示祝福语
   setTimeout(() => {
     loader.style.display = 'none';
     startWishes();
@@ -169,7 +147,6 @@ button.addEventListener("click", async () => {
 });
 
 function startWishes() {
-  // 每0.3秒出现一条祝福语
   let count = 0;
   const interval = setInterval(() => {
     const wish = document.createElement('div');
@@ -182,7 +159,6 @@ function startWishes() {
     if (count > 200) clearInterval(interval);
   }, 300);
 
-  // 背景飘落光点
   for (let i = 0; i < 60; i++) {
     const dot = document.createElement('div');
     dot.className = 'dot';
