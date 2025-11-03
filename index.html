@@ -16,6 +16,7 @@
     position: relative;
   }
 
+  /* 按钮样式 */
   .start-btn {
     position: absolute;
     top: 50%;
@@ -32,12 +33,50 @@
     transition: 0.3s;
     z-index: 10;
   }
-
   .start-btn:hover {
     background: #ff5e91;
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
   }
 
+  /* 心形加载动画 */
+  .loader {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background-color: #ff7da8;
+    transform: rotate(45deg);
+    animation: heartbeat 1s infinite;
+    z-index: 10;
+  }
+  .loader::before,
+  .loader::after {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-color: #ff7da8;
+    border-radius: 50%;
+  }
+  .loader::before {
+    top: -40px;
+    left: 0;
+  }
+  .loader::after {
+    left: -40px;
+    top: 0;
+  }
+
+  @keyframes heartbeat {
+    0% { transform: scale(1) rotate(45deg); }
+    50% { transform: scale(1.2) rotate(45deg); }
+    100% { transform: scale(1) rotate(45deg); }
+  }
+
+  /* 祝福语样式 */
   .wish {
     position: absolute;
     color: #ff4f7d;
@@ -57,6 +96,7 @@
     to { opacity: 1; transform: scale(1) rotate(0deg); }
   }
 
+  /* 飘落光点 */
   .dot {
     position: absolute;
     width: 6px;
@@ -74,8 +114,16 @@
 </head>
 <body>
 
-<button class="start-btn" onclick="startWishes()">🌸 开始祝福 🌸</button>
-<audio id="music" src="https://raw.githubusercontent.com/labornjames/music/main/%E9%98%BF%E5%86%97%20-%20%E4%B8%8E%E6%88%91%E6%97%A0%E5%85%B3_L.mp3" autoplay></audio>
+<button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
+<div class="loader" id="loader"></div>
+
+<audio 
+  id="music" 
+  src="https://raw.githubusercontent.com/labornjames/music/main/%E9%98%BF%E5%86%97%20-%20%E4%B8%8E%E6%88%91%E6%97%A0%E5%85%B3_L.mp3"
+  preload="auto"
+  playsinline
+  webkit-playsinline>
+</audio>
 
 <script>
 const wishes = [
@@ -84,18 +132,33 @@ const wishes = [
   "别太累啦，偶尔偷个懒也好", "金榜题名", "记得好好护肤",
   "保持微笑呀", "愿所有烦恼都消失", "学会爱自己，才能更好地爱别人",
   "希望每一天都闪闪发光", "祝你今天也元气满满", "好运常伴", "梦想开花"
-
 ];
 
+const music = document.getElementById('music');
+const button = document.getElementById('startButton');
+const loader = document.getElementById('loader');
+
+button.addEventListener("click", async () => {
+  button.style.display = 'none';
+  loader.style.display = 'block'; // 显示心跳动画
+
+  // iOS需用户交互才能播放
+  try {
+    await music.load();
+    await music.play();
+  } catch (e) {
+    console.log("播放被阻止", e);
+  }
+
+  // 模拟加载2秒后进入祝福模式
+  setTimeout(() => {
+    loader.style.display = 'none';
+    startWishes();
+  }, 2000);
+});
+
 function startWishes() {
-  document.querySelector('.start-btn').style.display = 'none';
-
-  const music = document.getElementById('music');
-  music.play().catch(() => {
-    // 某些浏览器可能需要用户交互后才播放
-  });
-
-  // 每0.4秒出现一条祝福语
+  // 每0.3秒出现一条祝福语
   let count = 0;
   const interval = setInterval(() => {
     const wish = document.createElement('div');
@@ -106,7 +169,7 @@ function startWishes() {
     document.body.appendChild(wish);
     count++;
     if (count > 200) clearInterval(interval);
-  }, 400);
+  }, 300);
 
   // 背景飘落光点
   for (let i = 0; i < 60; i++) {
