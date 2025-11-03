@@ -121,9 +121,10 @@
 <button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
 <div class="loader" id="loader"></div>
 
+<!-- ✅ 使用 jsDelivr CDN 加速并正确设置 MIME -->
 <audio 
   id="music" 
-  src="https://raw.githubusercontent.com/labornjames/music/main/%E9%98%BF%E5%86%97%20-%20%E4%B8%8E%E6%88%91%E6%97%A0%E5%85%B3_L.mp3"
+  src="https://cdn.jsdelivr.net/gh/labornjames/music/阿冗%20-%20与我无关_L.mp3"
   preload="auto"
   playsinline
   webkit-playsinline>
@@ -142,13 +143,13 @@ const music = document.getElementById('music');
 const button = document.getElementById('startButton');
 const loader = document.getElementById('loader');
 
-// ✅ iOS 特殊处理：第一次触摸即解锁音频权限
-document.body.addEventListener('touchstart', function unlockAudio() {
+// ✅ 手机音频权限预解锁（iOS/Android）
+document.addEventListener('click', () => {
   music.play().then(() => {
-    console.log('音频已解锁');
+    music.pause();
+    music.currentTime = 0;
   }).catch(() => {});
-  document.body.removeEventListener('touchstart', unlockAudio);
-});
+}, { once: true });
 
 button.addEventListener("click", async () => {
   button.style.display = 'none';
