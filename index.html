@@ -3,170 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>特别的祝福</title>
+<title>特别的祝福 💖</title>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
   body {
     margin: 0;
     height: 100vh;
-    background: radial-gradient(circle at center, #ffe6ef, #ffd1dc);
+    background: white;
     overflow: hidden;
     font-family: 'Pacifico', cursive;
     position: relative;
   }
-  .start-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 16px 36px;
+
+  /* 🌸 弹窗背景 */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(255, 192, 203, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    z-index: 100;
+  }
+
+  /* 🌸 弹窗主体 */
+  .popup {
+    background: #fff0f6;
+    padding: 30px 40px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 100, 150, 0.3);
+    animation: popIn 0.8s ease;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .popup h2 {
+    color: #ff4f7d;
+    margin-bottom: 20px;
+    font-size: 26px;
+  }
+
+  .popup button {
+    padding: 12px 30px;
     background: #ff7da8;
     color: white;
     border: none;
-    border-radius: 30px;
-    font-size: 22px;
+    border-radius: 25px;
+    font-size: 18px;
     cursor: pointer;
     box-shadow: 0 0 20px rgba(255, 122, 150, 0.6);
     transition: 0.3s;
-    z-index: 10;
   }
-  .start-btn:hover {
+
+  .popup button:hover {
     background: #ff5e91;
     box-shadow: 0 0 30px rgba(255, 92, 140, 0.8);
   }
-  .loader {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background-color: #ff7da8;
-    transform: rotate(45deg);
-    animation: heartbeat 1s infinite;
-    z-index: 10;
-  }
-  .loader::before,
-  .loader::after {
-    content: "";
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background-color: #ff7da8;
-    border-radius: 50%;
-  }
-  .loader::before { top: -40px; left: 0; }
-  .loader::after { left: -40px; top: 0; }
-  @keyframes heartbeat {
-    0% { transform: scale(1) rotate(45deg); }
-    50% { transform: scale(1.2) rotate(45deg); }
-    100% { transform: scale(1) rotate(45deg); }
-  }
+
+  /* 💌 小卡片样式 */
   .wish {
     position: absolute;
-    color: #ff4f7d;
-    font-size: 22px;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
     opacity: 0;
-    padding: 10px 20px;
-    border: 2px solid #ff9fc0;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 15px rgba(255, 150, 170, 0.5);
-    text-shadow: 0 0 5px rgba(255, 100, 140, 0.3);
+    width: 180px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 150, 180, 0.3);
+    box-shadow: 0 4px 10px rgba(255, 150, 170, 0.3);
     animation: fadeIn 1s ease forwards;
+    transition: all 5s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
   }
+
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
     to { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-  .dot {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 50%;
-    animation: fall 6s linear infinite;
+
+  /* 💓 心跳动画 */
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.04); }
+    50% { transform: scale(0.98); }
+    75% { transform: scale(1.05); }
   }
-  @keyframes fall {
-    from { transform: translateY(-10px); opacity: 1; }
-    to { transform: translateY(100vh); opacity: 0; }
+
+  /* 💝 中心主卡片 */
+  .center-heart {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-60%, -50%) scale(0);
+    width: 240px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+    background: linear-gradient(180deg, #ffe5ef, #fff7fa);
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(255, 120, 160, 0.4);
+    color: #ff4f7d;
+    font-size: 24px;
+    font-weight: 700;
+    opacity: 0;
+    animation: showCenter 1s ease forwards;
+    animation-delay: 1s;
+  }
+
+  @keyframes showCenter {
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   }
 </style>
 </head>
+
 <body>
 
-<button id="startButton" class="start-btn">🌸 开始祝福 🌸</button>
-<div class="loader" id="loader"></div>
+<!-- 🌸 弹窗 -->
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <h2>🎁 你收到一份特别的礼物</h2>
+    <button id="acceptBtn">接受 💖</button>
+  </div>
+</div>
 
+<!-- 🌸 音乐 -->
 <audio 
   id="music" 
   src="https://cdn.jsdelivr.net/gh/labornjames/music/%E9%98%BF%E5%86%97%20-%20%E4%B8%8E%E6%88%91%E6%97%A0%E5%85%B3_L.mp3"
   preload="auto"
   playsinline
   webkit-playsinline
-  muted>
-</audio>
+></audio>
 
 <script>
 const wishes = [
   "保持好心情", "珍惜每一刻", "你超棒的", "早点休息", "我想你了",
   "梦想成真", "天冷了，多穿衣服", "顺顺利利", "要相信自己哦",
-  "别太累啦，偶尔偷个懒也好", "你是最棒的", "记得好好护肤",
-  "保持微笑呀", "愿所有烦恼都消失", "学会爱自己，才能更好地爱别人",
+  "别太累啦", "你是最棒的", "记得好好护肤","心想事成",
+  "保持微笑呀", "愿所有烦恼都消失", "爱人先爱己","一路生花","没有什么可以难倒你",
   "希望每一天都闪闪发光", "祝你今天也元气满满", "好运常伴", "梦想开花"
 ];
 
+const overlay = document.getElementById('overlay');
+const acceptBtn = document.getElementById('acceptBtn');
 const music = document.getElementById('music');
-const button = document.getElementById('startButton');
-const loader = document.getElementById('loader');
+const startTime = 97;
+const endTime = 161;
 
-// iOS/Chrome 预解锁音频权限
+// 🌈 随机柔和颜色背景
+const gradients = [
+  ['#ffe5ef', '#fff7fa'],
+  ['#e0f7fa', '#f0ffff'],
+  ['#fff9e6', '#fff3cc'],
+  ['#f5e6ff', '#f0d9ff'],
+  ['#e6fff2', '#d9ffee']
+];
+
+// iOS 音频预解锁
 document.body.addEventListener('touchstart', function unlockAudio() {
-  music.play().then(() => {
-    console.log('音频已预加载');
-  }).catch(() => {});
+  music.play().then(() => music.pause());
   document.body.removeEventListener('touchstart', unlockAudio);
 });
 
-button.addEventListener("click", async () => {
-  button.style.display = 'none';
-  loader.style.display = 'block';
-  
+acceptBtn.addEventListener("click", async () => {
+  overlay.style.display = 'none';
   try {
-    music.muted = false; // 🔊 取消静音
-    await music.play(); // 点击后立即播放
+    music.currentTime = startTime;
+    await music.play();
   } catch (e) {
     console.log("播放被阻止", e);
   }
 
-  setTimeout(() => {
-    loader.style.display = 'none';
-    startWishes();
-  }, 2000);
+  // ✅ 循环播放片段
+  setInterval(() => {
+    if (music.currentTime >= endTime) {
+      music.currentTime = startTime;
+      music.play();
+    }
+  }, 200);
+
+  // 🌸 开始显示祝福卡片
+  startWishes();
 });
 
+// 💌 动画：卡片弹出后聚合成心形
 function startWishes() {
   let count = 0;
+  const total = 300; // 💡 卡片数量
   const interval = setInterval(() => {
     const wish = document.createElement('div');
     wish.className = 'wish';
     wish.textContent = wishes[Math.floor(Math.random() * wishes.length)];
-    wish.style.left = Math.random() * 90 + '%';
-    wish.style.top = Math.random() * 90 + '%';
-    document.body.appendChild(wish);
-    count++;
-    if (count > 200) clearInterval(interval);
-  }, 300);
 
-  for (let i = 0; i < 60; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot';
-    dot.style.left = Math.random() * 100 + 'vw';
-    dot.style.animationDuration = 4 + Math.random() * 3 + 's';
-    dot.style.animationDelay = Math.random() * 5 + 's';
-    document.body.appendChild(dot);
-  }
+    const [c1, c2] = gradients[Math.floor(Math.random() * gradients.length)];
+    wish.style.background = `linear-gradient(180deg, ${c1}, ${c2})`;
+
+    // 随机初始位置
+    wish.style.left = Math.random() * window.innerWidth + 'px';
+    wish.style.top = Math.random() * window.innerHeight + 'px';
+    document.body.appendChild(wish);
+
+    count++;
+    if (count > total) {
+      clearInterval(interval);
+      setTimeout(formHeart, 3000); // 💗 全部出现后聚成心形
+    }
+  }, 150);
+}
+
+// 💗 心形聚合函数
+function formHeart() {
+  const cards = document.querySelectorAll('.wish');
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const scale = 25;
+
+  cards.forEach((card, i) => {
+    const t = Math.PI * 2 * (i / cards.length);
+    const x = 16 * Math.sin(t) ** 3;
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+    const targetX = centerX + x * scale;
+    const targetY = centerY - y * scale;
+    card.style.transition = "all 5s ease-in-out";
+    card.style.left = `${targetX - 90}px`;
+    card.style.top = `${targetY - 50}px`;
+    card.style.opacity = 1;
+  });
+
+  // 💓 添加心跳动画，保持最终画面
+  setTimeout(() => {
+    cards.forEach(c => c.style.animation = "heartbeat 2.5s infinite ease-in-out");
+    showCenterHeart(); // 🌟 添加中心卡片
+  }, 6000);
+}
+
+// 💝 中心祝福出现
+function showCenterHeart() {
+  const center = document.createElement('div');
+  center.className = 'center-heart';
+  center.textContent = '💌 希望你天天开心';
+  document.body.appendChild(center);
+  center.style.animation = "showCenter 2s ease forwards, heartbeat 3s infinite ease-in-out 2s";
 }
 </script>
 
